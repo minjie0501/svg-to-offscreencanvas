@@ -10,18 +10,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-onmessage = async (e) => {
+let offscreenCanvas;
+let ctx;
 
+onmessage = async (e) => {
   // NOTE: dummy computationally expensive function
   // for (let i = 0; i < 10000000000; i++) {}
 
-  const { butterfly, offscreenCanvas } = e.data;
-  console.log("trest");
+  if (!offscreenCanvas) offscreenCanvas = e.data.offscreenCanvas;
+  if (!ctx) ctx = offscreenCanvas.getContext("2d");
+  const { svg } = e.data;
   offscreenCanvas.height = 500;
-  offscreenCanvas.width = 500;
-  const ctx = offscreenCanvas.getContext("2d");
-  const v = await canvg__WEBPACK_IMPORTED_MODULE_1__.Canvg.fromString(ctx, butterfly, canvg__WEBPACK_IMPORTED_MODULE_1__.presets.offscreen(xmldom__WEBPACK_IMPORTED_MODULE_0__));
-  console.log(v.document);
+  offscreenCanvas.width = 600;
+
+  const v = await canvg__WEBPACK_IMPORTED_MODULE_1__.Canvg.fromString(ctx, svg, canvg__WEBPACK_IMPORTED_MODULE_1__.presets.offscreen(xmldom__WEBPACK_IMPORTED_MODULE_0__));
   await v.render();
   v.start();
 
@@ -8999,7 +9001,7 @@ function BlurStack() {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("45adbe11f4c1d3c25ddd")
+/******/ 		__webpack_require__.h = () => ("a9f1f5351cf64c98d5c5")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
