@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { butterfly, floorplan, tiger, world } from "./examples";
+import * as Comlink from "comlink";
 
 function App() {
   const [offscreenCanvas, setOffscreenCanvas] = useState();
@@ -8,17 +9,16 @@ function App() {
   const [worker, setWorker] = useState();
   const checkRef = useRef(true);
 
-  const runWorker = () => {
+  const runWorker = async () => {
     if (checkRef.current) {
-      worker.postMessage({ offscreenCanvas, svg }, [offscreenCanvas]);
+      const obj = Comlink.wrap(worker);
+      await obj.getCanvas(Comlink.transfer(offscreenCanvas, [offscreenCanvas]));
+      await obj.renderSvg(svg);
       checkRef.current = false;
     } else {
-      worker.postMessage({ svg });
+      const obj = Comlink.wrap(worker);
+      await obj.renderSvg(svg);
     }
-
-    worker.onmessage = (e) => {
-      //   worker.terminate();
-    };
   };
 
   const handleClick = (e) => {
